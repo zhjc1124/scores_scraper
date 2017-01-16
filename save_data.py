@@ -17,8 +17,11 @@ with connections.cursor() as cursor:
     #创建表stu键分别对应姓名，教学号，身份证号
     cursor.execute('''create table stuall(name varchar(20) not null,
                                          tcode char(8) not null primary key,
-                                         id char(18) not null);''')
+                                         id char(18) not null,
+                                         mathI int unsigned not null,
+                                         English int unsigned not NULL,
+                                         );''')
     #打开存有学生信息的文件
     with open('stu.txt','r',encoding = 'utf8') as f:
          for line in f.readlines():
-             cursor.execute('insert into stu values(%s,%s,%s);',tuple(line.strip().split('\t')))
+             cursor.execute('insert into stu (name,tcode,id) values(%s,%s,%s);',tuple(line.strip().split('\t')))
