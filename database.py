@@ -9,8 +9,8 @@ import json
 import time
 
 NETERROR = []
-PASSWORD_CHANGED = 0
-UNREGISTED = 0
+PASSWORD_CHANGED = []
+UNREGISTED = []
 # 函数获取身份信息列表，返回成绩以['英语','大计基','工图','思修','c语言','高数']列表形式返回
 def get_score(stu_info):
     time.sleep(2)
@@ -42,7 +42,7 @@ def get_score(stu_info):
     try:
         result = opener.open(login_url, post_data)
     except Exception:
-        NETERROR.append(j_username)
+        NETERROR.append(username)
         return(stu_info + [-1] * 6)
     # post数据
     phpsession = list(cookie)[0].value
@@ -77,7 +77,7 @@ def get_score(stu_info):
     result = json.loads(raw_result)['items']
     # 如果密码错误，result是空[]，把成绩设为-1，PASSWORD_CHANGED用来计数
     if not bool(result):
-        PASSWORD_CHANGED = PASSWORD_CHANGED + 1
+        PASSWORD_CHANGED.append(username)
         return(stu_info + [-1] * 6)
     # 将数据转换成字典
     get_cj = lambda x :(x['kcmc'],x['cj'])
@@ -91,7 +91,7 @@ def get_score(stu_info):
     scores_list = list( map( lambda x: scores_dict[x], get_list) )
     #被屏蔽进行计数
     if '被屏蔽' in scores_list:
-        UNREGISTED = UNREGISTED + 1
+        UNREGISTED.append(username)
         scores_list = [-1] * 6
     return(stu_info + scores_list)
 
@@ -127,10 +127,19 @@ with connections.cursor() as cursor:
             stu_info = line.strip().split('\t')
             stu_scores = get_score(stu_info)
             print('总人数%s人' % ALL_STU, end='\t')
-            print('密码错误%s个' % PASSWORD_CHANGED, end = '\t')
-            print('被屏蔽%s个' % UNREGISTED, end='\t')
-            print('网络错误%s个' % UNREGISTED, end='\t')
+            print('密码错误%s个' % len(PASSWORD_CHANGED), end = '\t')
+            print('被屏蔽%s个' % len(UNREGISTED), end='\t')
+            print('网络错误%s个' % len(NETERROR), end='\t')
             for item in stu_scores:
                 print(item, end = '\t')
             cursor.execute('insert into stu values(%s,%s,%s,%s,%s,%s,%s,%s,%s);', stu_scores)
             print('')
+
+#打印错误信息和有关列表中的人
+def print_summit(info,rel_list):
+    print(info)
+    for stu in rel_list:
+        print(stu, end='\t')
+list( map(print_summit, (('\n密码错误:', PASSWORD_CHANGED),
+                         ('\n屏蔽错误:', UNREGISTED),
+                         ('\n网络错误:', NETERROR)) ) )
