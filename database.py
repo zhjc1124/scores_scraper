@@ -6,12 +6,14 @@ import urllib.request
 import http.cookiejar
 import hashlib
 import json
+import time
 
 NETERROR = []
 PASSWORD_CHANGED = 0
 UNREGISTED = 0
 # 函数获取身份信息列表，返回成绩以['英语','大计基','工图','思修','c语言','高数']列表形式返回
 def get_score(stu_info):
+    time.sleep(2)
     global PASSWORD_CHANGED
     global UNREGISTED
     global NETERROR
@@ -127,6 +129,7 @@ with connections.cursor() as cursor:
             print('总人数%s人' % ALL_STU, end='\t')
             print('密码错误%s个' % PASSWORD_CHANGED, end = '\t')
             print('被屏蔽%s个' % UNREGISTED, end='\t')
+            print('网络错误%s个' % UNREGISTED, end='\t')
             for item in stu_scores:
                 print(item, end = '\t')
             cursor.execute('insert into stu values(%s,%s,%s,%s,%s,%s,%s,%s,%s);', stu_scores)
