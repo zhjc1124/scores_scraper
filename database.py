@@ -13,6 +13,7 @@ PASSWORD_CHANGED = []
 UNREGISTED = []
 # 函数获取身份信息列表，返回成绩以['英语','大计基','工图','思修','c语言','高数']列表形式返回
 def get_score(stu_info):
+    # 防反爬虫
     time.sleep(2)
     global PASSWORD_CHANGED
     global UNREGISTED
@@ -82,12 +83,13 @@ def get_score(stu_info):
     # 将数据转换成字典
     get_cj = lambda x :(x['kcmc'],x['cj'])
     scores_dict = dict(list(map(get_cj, result)))
-    #信息学生没有‘程序设计与编程’，设初值-1
-    scores_dict.setdefault('程序设计与编程',-1)
+    #信息学生没有‘程序设计与编程’，设初值-1，而且排除没有某科的情况
+    scores_dict.setdefault('程序设计与编程', -1)
+    get_list = ['大学英语BⅠ','大学计算机基础','工程图学D','思想道德修养与法律基础','程序设计与编程','高等数学BⅠ']
+    list( map( lambda x:scores_dict.setdefault(x, -1), get_list))
     #英语分了一二级班。这里简化合并
     if '大学英语BⅡ' in scores_dict:
         scores_dict['大学英语BⅠ'] = scores_dict['大学英语BⅡ']
-    get_list = ['大学英语BⅠ','大学计算机基础','工程图学D','思想道德修养与法律基础','程序设计与编程','高等数学BⅠ']
     scores_list = list( map( lambda x: scores_dict[x], get_list) )
     #被屏蔽进行计数
     if '被屏蔽' in scores_list:
@@ -105,10 +107,10 @@ connections = pymysql.connect(host = data[0],user = data[1],password = data[2],c
 
 #打开数据库指针
 with connections.cursor() as cursor:
-    #创建并使用数据库stu2016
+    # 创建并使用数据库stu2016
     cursor.execute('create database stu2016 character set utf8;')
     cursor.execute('use stu2016')
-    #创建表stu键，依次是姓名，教学号，身份证号，英语，大计基，工图，思修，c语言，高数
+    # 创建表stu键，依次是姓名，教学号，身份证号，英语，大计基，工图，思修，c语言，高数
     cursor.execute('''create table stu(name varchar(20) not null,
                                          tcode char(8) not null primary key,
                                          id char(18) not null,
