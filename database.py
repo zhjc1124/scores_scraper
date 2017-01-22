@@ -38,7 +38,9 @@ with connections.cursor() as cursor:
             # 要查询的成绩列表
             get_list = ['大学英语BⅠ', '大学计算机基础', '工程图学D', '思想道德修养与法律基础', '程序设计与编程', '高等数学BⅠ']
             # 避免没有这科成绩的错误，故设成-1
-            list(map(lambda x: scores_dict.setdefault(x, -1), get_list))
+            [scores_dict.setdefault(x, -1) for x in get_list]
+            # 等价 # list(map(lambda x: scores_dict.setdefault(x, -1), get_list))
+
             # 英语分了一二级班。这里简化合并
             if '大学英语BⅡ' in scores_dict:
                 scores_dict['大学英语BⅠ'] = scores_dict['大学英语BⅡ']

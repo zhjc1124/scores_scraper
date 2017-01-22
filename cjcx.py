@@ -72,8 +72,9 @@ def get_score(stu_info):
         print('密码错误')
         return({})
     # 将数据转换成字典
-    get_cj = lambda x :(x['kcmc'],x['cj'])
-    scores_dict = dict(list(map(get_cj, result)))
+    scores_dict = {x['kcmc']: x['cj'] for x in result}
+    #等价# get_cj = lambda x :(x['kcmc'],x['cj'])
+         # scores_dict = dict(list(map(get_cj, result)))
     if '被屏蔽' in scores_dict.values():
         print('成绩被屏蔽')
         return({})
