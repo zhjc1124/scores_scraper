@@ -5,7 +5,7 @@ import hashlib
 import json
 import time
 
-# 函数获取身份信息列表[姓名,教学号,身份证]，返回成绩以字典形式返回
+# 函数获取身份信息列表[姓名,教学号,身份证/密码]，返回成绩以字典形式返回
 def get_score(stu_info):
     # 防反爬虫
     time.sleep(2)
