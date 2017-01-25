@@ -28,7 +28,7 @@ with connections.cursor() as cursor:
 
     # 打开存有学生信息的文件
     with open('stu.txt', 'r', encoding='utf8') as f:
-        stu_infos = f.readlines()
+        stu_infos = f.readlines()[::-1]
         for line in stu_infos:
             stu_info = line.strip().split('\t')
             scores_dict = get_score(stu_info)

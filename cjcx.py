@@ -60,7 +60,7 @@ def get_score(stu_info):
                                                                                                 # 131是2016-2017第一个学期，其他的按时间加1减1
     request = urllib.request.Request(post_url, post_data, headers)
     try:
-        response = urllib.request.urlopen(request)
+        response = opener.open(request)
     except Exception:
         print('连接错误')
         return({})
