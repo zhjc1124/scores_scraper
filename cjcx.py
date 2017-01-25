@@ -80,3 +80,7 @@ def get_score(stu_info):
         return({})
     print('获取成功')
     return(scores_dict)
+if __name__ == "__main__":
+    username = input('请输入用户名：')
+    password = input('请输入密码：')
+    get_score(['', username, password])
