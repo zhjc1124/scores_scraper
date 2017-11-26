@@ -3,9 +3,9 @@ from email.mime.text import MIMEText
 from email.header import Header
 
 
-def sendmail(text):
+def sendmail(text, receivers):
     sender = 'sxtyliuchang@sohu.com'
-    receivers = ['601040231.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+    receivers = [receivers]
 
     # 三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
     message = MIMEText(text, 'plain', 'utf-8')
@@ -17,3 +17,7 @@ def sendmail(text):
 
     smtpObj = smtplib.SMTP('localhost')
     smtpObj.sendmail(sender, receivers, message.as_string())
+
+
+if __name__ == "__main__":
+    sendmail('TEST', '601040231@qq.com')
